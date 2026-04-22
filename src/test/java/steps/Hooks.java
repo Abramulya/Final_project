@@ -3,6 +3,7 @@ package steps;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.logevents.SelenideLogger;
+import config.WebDriverConfig;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.qameta.allure.selenide.AllureSelenide;
@@ -16,32 +17,24 @@ public class Hooks {
 
     @Before
     public void setUp() {
-        // Настройка Selenide
-        Configuration.browser = "chrome";
-        Configuration.browserSize = "1920x1080";
-        Configuration.headless = false;
-        Configuration.timeout = 10000;
-        Configuration.baseUrl = "https://qa-desk.stand.praktikum-services.ru";
+        // Используйте единую конфигурацию
+        WebDriverConfig.setUp();
 
-        // Отключаем предупреждения о скомпрометированных паролях
+        // Дополнительные настройки Chrome
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--disable-notifications");
         options.addArguments("--disable-save-password-bubble");
         options.addArguments("--disable-password-manager-reauthentication");
         options.addArguments("--disable-password-manager");
+        options.addArguments("--disable-features=PasswordCheck,PasswordLeakDetection");
 
-        // отключаем проверку утечки паролей
         Map<String, Object> prefs = new HashMap<>();
         prefs.put("profile.password_manager_enabled", false);
         prefs.put("credentials_enable_service", false);
         prefs.put("password_manager_enabled", false);
         options.setExperimentalOption("prefs", prefs);
 
-        // Отключаем автоматическое всплывающее окно
-        options.addArguments("--disable-features=PasswordCheck,PasswordLeakDetection");
-
-        SelenideLogger.addListener("AllureSelenide",
-                new AllureSelenide().screenshots(true).savePageSource(true));
+        Configuration.browserCapabilities = options;
 
         // Инициализация API клиента
         ApiClient.init();

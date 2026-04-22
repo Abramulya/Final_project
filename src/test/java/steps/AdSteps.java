@@ -1,5 +1,6 @@
 package steps;
 
+import com.codeborne.selenide.Condition;
 import io.cucumber.java.ru.*;
 import models.Ad;
 import models.User;
@@ -8,6 +9,7 @@ import pages.LoginPage;
 import pages.ProfilePage;
 import utils.TestDataGenerator;
 
+import static com.codeborne.selenide.Selenide.$;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class AdSteps {
@@ -26,12 +28,18 @@ public class AdSteps {
                 "testuser"
         );
         loginPage.login(testUser.getEmail(), testUser.getPassword());
+
+        // Добавьте ожидание успешной авторизации
+        profilePage.getCreateAdButton().shouldBe(Condition.visible);
+
         System.out.println("✓ Пользователь зарегистрирован и авторизован");
     }
 
     @Когда("пользователь переходит на страницу создания объявления")
     public void goToCreateAdPage() {
         profilePage.clickCreateAd();
+        // Добавьте ожидание загрузки страницы создания объявления
+        adCreationPage.waitForPageLoaded();
     }
 
     @И("пользователь создает новое объявление")
@@ -54,6 +62,8 @@ public class AdSteps {
     @Тогда("объявление успешно создано")
     public void adCreatedSuccessfully() {
         System.out.println("✓ Объявление успешно создано: " + currentAd.getTitle());
+
+        // Проверяем, что появилось сообщение об успехе или произошел редирект
         assertThat(adCreationPage.isAdCreated()).isTrue();
     }
 }

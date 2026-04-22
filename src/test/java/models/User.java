@@ -1,5 +1,12 @@
 package models;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
     private String id;
     private String email;
@@ -12,10 +19,4 @@ public class User {
         this.password = password;
         this.username = username;
     }
-
-    // Getters and Setters
-    public void setId(String id) { this.id = id; }
-    public String getEmail() { return email; }
-    public String getPassword() { return password; }
-    public void setToken(String token) { this.token = token; }
 }
