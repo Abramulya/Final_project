@@ -1,8 +1,13 @@
 package steps;
 
+import static com.codeborne.selenide.Condition.visible;
+
 import io.cucumber.java.ru.*;
 import models.User;
+import pages.BasePage;
 import pages.LoginPage;
+import utils.ApiClient;
+import utils.TestDataGenerator;
 
 public class LoginSteps {
     private LoginPage loginPage = new LoginPage();
@@ -16,15 +21,22 @@ public class LoginSteps {
     @И("вводит корректные email и пароль")
     public void enterValidCredentials() {
         testUser = new User(
-                "test2@mail.com",
-                "test123",
-                "testuser"
+                TestDataGenerator.generateUniqueEmail(),
+                TestDataGenerator.generatePassword(),
+                TestDataGenerator.generateUsername()
         );
+        ApiClient.registerUser(testUser);
         loginPage.login(testUser.getEmail(), testUser.getPassword());
     }
 
     @Тогда("авторизация успешно проходит")
     public void loginSuccess() {
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        BasePage.logoutButton.shouldBe(visible);
         System.out.println("✓ Авторизация выполнена");
     }
 }

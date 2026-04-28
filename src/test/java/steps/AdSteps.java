@@ -7,9 +7,9 @@ import models.User;
 import pages.AdCreationPage;
 import pages.LoginPage;
 import pages.ProfilePage;
+import utils.ApiClient;
 import utils.TestDataGenerator;
 
-import static com.codeborne.selenide.Selenide.$;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class AdSteps {
@@ -21,24 +21,23 @@ public class AdSteps {
 
     @Пусть("пользователь зарегистрирован и авторизован")
     public void userRegisteredAndAuthorized() {
-        loginPage.openPage();
         testUser = new User(
-                "test3@mail.com",
-                "Test567!home_worktoday098@$",
-                "testuser"
+                TestDataGenerator.generateUniqueEmail(),
+                TestDataGenerator.generatePassword(),
+                TestDataGenerator.generateUsername()
         );
+        ApiClient.registerUser(testUser);
+
+        loginPage.openPage();
         loginPage.login(testUser.getEmail(), testUser.getPassword());
 
-        // Добавьте ожидание успешной авторизации
         profilePage.getCreateAdButton().shouldBe(Condition.visible);
-
         System.out.println("✓ Пользователь зарегистрирован и авторизован");
     }
 
     @Когда("пользователь переходит на страницу создания объявления")
     public void goToCreateAdPage() {
         profilePage.clickCreateAd();
-        // Добавьте ожидание загрузки страницы создания объявления
         adCreationPage.waitForPageLoaded();
     }
 
@@ -61,9 +60,9 @@ public class AdSteps {
 
     @Тогда("объявление успешно создано")
     public void adCreatedSuccessfully() {
+        assertThat(adCreationPage.isAdCreated())
+                .as("Не произошёл редирект на главную после создания объявления")
+                .isTrue();
         System.out.println("✓ Объявление успешно создано: " + currentAd.getTitle());
-
-        // Проверяем, что появилось сообщение об успехе или произошел редирект
-        assertThat(adCreationPage.isAdCreated()).isTrue();
     }
 }

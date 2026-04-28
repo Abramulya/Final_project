@@ -1,8 +1,11 @@
 package steps;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import io.cucumber.java.ru.*;
 import models.User;
 import pages.RegistrationPage;
+import utils.ApiClient;
 import utils.TestDataGenerator;
 
 public class RegistrationSteps {
@@ -19,14 +22,21 @@ public class RegistrationSteps {
         testUser = new User(
                 TestDataGenerator.generateUniqueEmail(),
                 TestDataGenerator.generatePassword(),
-                "testuser"
+                TestDataGenerator.generateUsername()
         );
         registrationPage.register(testUser.getEmail(), testUser.getPassword());
     }
 
     @И("заполняет форму регистрации уже зарегистрированным email")
     public void fillRegistrationFormWithExistingEmail() {
-        registrationPage.register("existing@test.com", "password123");
+        testUser = new User(
+                TestDataGenerator.generateUniqueEmail(),
+                TestDataGenerator.generatePassword(),
+                TestDataGenerator.generateUsername()
+        );
+        ApiClient.registerUser(testUser);
+        registrationPage.openPage();
+        registrationPage.register(testUser.getEmail(), testUser.getPassword());
     }
 
     @Тогда("регистрация успешно завершается")
@@ -36,6 +46,11 @@ public class RegistrationSteps {
 
     @Тогда("система показывает ошибку о том, что пользователь уже существует")
     public void registrationErrorDisplayed() {
-        assert registrationPage.isErrorDisplayed() : "Ошибка не отобразилась";
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertTrue(registrationPage.isErrorDisplayed(), "Ошибка о существующем пользователе не отобразилась");
     }
 }

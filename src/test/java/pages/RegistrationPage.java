@@ -29,6 +29,6 @@ public class RegistrationPage extends BasePage {
     }
 
     public boolean isErrorDisplayed() {
-        return errorMessage.isDisplayed();
+        return errorMessage.exists() && errorMessage.isDisplayed();
     }
 }

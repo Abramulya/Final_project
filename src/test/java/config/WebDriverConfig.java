@@ -5,7 +5,7 @@ import com.codeborne.selenide.logevents.SelenideLogger;
 import io.qameta.allure.selenide.AllureSelenide;
 
 public class WebDriverConfig {
-    public static final String BASE_URL = "https://qa-desk.stand.praktikum-services.ru";
+    public static final String BASE_URL = "https://qa-desk.education-services.ru";
 
     public static void setUp() {
         Configuration.browser = "chrome";

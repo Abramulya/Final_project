@@ -2,11 +2,9 @@ package steps;
 
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Selenide;
-import com.codeborne.selenide.logevents.SelenideLogger;
 import config.WebDriverConfig;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
-import io.qameta.allure.selenide.AllureSelenide;
 import org.openqa.selenium.chrome.ChromeOptions;
 import utils.ApiClient;
 
@@ -17,10 +15,8 @@ public class Hooks {
 
     @Before
     public void setUp() {
-        // Используйте единую конфигурацию
         WebDriverConfig.setUp();
 
-        // Дополнительные настройки Chrome
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--disable-notifications");
         options.addArguments("--disable-save-password-bubble");
@@ -35,10 +31,7 @@ public class Hooks {
         options.setExperimentalOption("prefs", prefs);
 
         Configuration.browserCapabilities = options;
-
-        // Инициализация API клиента
         ApiClient.init();
-
         System.out.println("✓ Тест запущен, браузер настроен");
     }
 
