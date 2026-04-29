@@ -31,11 +31,6 @@ public class LoginSteps {
 
     @Тогда("авторизация успешно проходит")
     public void loginSuccess() {
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         BasePage.logoutButton.shouldBe(visible);
         System.out.println("✓ Авторизация выполнена");
     }

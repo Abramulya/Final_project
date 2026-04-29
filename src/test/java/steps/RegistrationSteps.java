@@ -46,11 +46,6 @@ public class RegistrationSteps {
 
     @Тогда("система показывает ошибку о том, что пользователь уже существует")
     public void registrationErrorDisplayed() {
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         assertTrue(registrationPage.isErrorDisplayed(), "Ошибка о существующем пользователе не отобразилась");
     }
 }

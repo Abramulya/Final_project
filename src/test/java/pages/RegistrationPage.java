@@ -29,6 +29,11 @@ public class RegistrationPage extends BasePage {
     }
 
     public boolean isErrorDisplayed() {
-        return errorMessage.exists() && errorMessage.isDisplayed();
+        try {
+            errorMessage.shouldBe(visible);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

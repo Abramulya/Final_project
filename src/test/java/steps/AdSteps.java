@@ -60,8 +60,8 @@ public class AdSteps {
 
     @Тогда("объявление успешно создано")
     public void adCreatedSuccessfully() {
-        assertThat(adCreationPage.isAdCreated())
-                .as("Не произошёл редирект на главную после создания объявления")
+        assertThat(adCreationPage.isAdCreated(currentAd.getTitle()))
+                .as("Объявление не найдено на главной странице")
                 .isTrue();
         System.out.println("✓ Объявление успешно создано: " + currentAd.getTitle());
     }

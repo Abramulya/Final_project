@@ -1,7 +1,6 @@
 package pages;
 
 import com.codeborne.selenide.SelenideElement;
-import com.codeborne.selenide.WebDriverRunner;
 
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
@@ -11,6 +10,9 @@ public class AdCreationPage extends BasePage {
     private SelenideElement descriptionInput = $("textarea[name='description']");
     private SelenideElement priceInput = $("input[name='price']");
     private SelenideElement publishButton = $("button[type='submit']");
+    private SelenideElement adCard = $("h2.h2");
+    private SelenideElement searchInput = $("input[placeholder='Я хочу купить...']");
+    private SelenideElement applyButton = $("button[type='submit']");
 
     public void waitForPageLoaded() {
         titleInput.shouldBe(visible);
@@ -25,15 +27,11 @@ public class AdCreationPage extends BasePage {
         publishButton.click();
     }
 
-    public boolean isAdCreated() {
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        String currentUrl = WebDriverRunner.url();
-        return currentUrl.equals("https://qa-desk.education-services.ru/")
-                || currentUrl.equals(WebDriverRunner.getWebDriver().getCurrentUrl().replaceAll("/$", ""));
+    public boolean isAdCreated(String adTitle) {
+        searchInput.shouldBe(visible);
+        searchInput.setValue(adTitle);
+        applyButton.click();
+        adCard.shouldBe(visible);
+        return adCard.getText().equals(adTitle);
     }
 }
